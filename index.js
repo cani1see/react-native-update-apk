@@ -42,19 +42,20 @@ export class UpdateAPK {
     // TODO switch this to versionCode
     if (RNUpdateAPK.versionName !== remote.versionName) {
       if (remote.forceUpdate) {
-        if (this.options.forceUpdateApp) {
-          this.options.forceUpdateApp();
-        }
-        this.downloadApk(remote);
+        this.options.requireForceUpdate(remote, isUpdate => {
+          if (isUpdate) {
+            this.downloadApk(remote);
+          }
+        });
       } else if (this.options.needUpdateApp) {
-        this.options.needUpdateApp(isUpdate => {
+        this.options.needUpdateApp(remote, isUpdate => {
           if (isUpdate) {
             this.downloadApk(remote);
           }
         });
       }
     } else if (this.options.notNeedUpdateApp) {
-      this.options.notNeedUpdateApp();
+      this.options.notNeedUpdateApp(remote);
     }
   };
 
